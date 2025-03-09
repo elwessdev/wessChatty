@@ -10,34 +10,36 @@ import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
+import { useAuthStore } from "./store/authStore";
 
 
 const App = () => {
+  const {user, checkAuth, checkAuthLoading} = useAuthStore();
   const { theme } = useThemeStore();
 
-  // useEffect(() => {
-  //   checkAuth();
-  // }, [checkAuth]);
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
-  // console.log({ authUser });
+  console.log({ user });
 
-  // if (isCheckingAuth && !authUser){
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <Loader className="size-10 animate-spin" />
-  //     </div>
-  //   );
-  // }
+  if (checkAuthLoading && !user){
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div data-theme={theme}>
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignUpPage /> } />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={user ?<HomePage /> :<Navigate to="/login" />} />
+        <Route path="/signup" element={user ?<Navigate to="/" /> :<SignUpPage />} />
+        <Route path="/login" element={user ?<Navigate to="/" /> :<LoginPage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile" element={user ?<ProfilePage /> :<Navigate to="/login" />} />
       </Routes>
       <Toaster />
     </div>

@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
+import useChatStore from "../store/chatStore";
 
 const Sidebar = () => {
-
+  const {users,usersLoading,getUsers,setSelectedUser} = useChatStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  // if (isUsersLoading) return <SidebarSkeleton />;
+  useEffect(()=>{
+    getUsers();
+  },[getUsers])
+
+  if (usersLoading) return <SidebarSkeleton />;
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
@@ -31,10 +36,10 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {/* {filteredUsers.map((user) => ( */}
+        {users?.map((user,idx) => (
           <button
-            // key={user._id}
-            // onClick={() => setSelectedUser(user)}
+            key={idx}
+            onClick={() => setSelectedUser(user)}
             className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
@@ -43,8 +48,8 @@ const Sidebar = () => {
           >
             <div className="relative mx-auto lg:mx-0">
               <img
-                src={"/avatar.png"}
-                // alt={user.name}
+                src={user?.profilePicture ?user?.profilePicture :"/avatar.png"}
+                alt={user.name}
                 className="size-12 object-cover rounded-full"
               />
               {/* {onlineUsers.includes(user._id) && (
@@ -57,14 +62,14 @@ const Sidebar = () => {
 
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">Osama</div>
+              <div className="font-medium truncate">{user?.name}</div>
               <div className="text-sm text-zinc-400">
                 {/* {onlineUsers.includes(user._id) ? "Online" : "Offline"} */}
                 Offline
               </div>
             </div>
           </button>
-        {/* ))} */}
+        ))}
 
         {/* {filteredUsers.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No online users</div>

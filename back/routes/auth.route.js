@@ -3,7 +3,8 @@ import {checkAuthMiddle} from '../middleware/auth.middleware.js';
 import {
     signup,
     signin,
-    checkAuth
+    checkAuth,
+    logout
 } from '../controllers/auth.controller.js';
 
 const router = express.Router();
@@ -12,6 +13,8 @@ const router = express.Router();
 router.post('/signup', signup);
 // Sign in
 router.post('/signin', signin);
+// Logout
+router.get('/logout',checkAuthMiddle,logout);
 // Check Auth
 router.get('/checkauth',checkAuthMiddle,checkAuth);
 

@@ -18,4 +18,4 @@ export default mongoose.model("users", new mongoose.Schema({
         type: String,
         default: "",
     },
-}),{timestamps: true});
+},{timestamps: true}));

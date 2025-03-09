@@ -5,12 +5,16 @@ import cors from "cors";
 
 import connectDB from './lib/db.js';
 import authRoutes from './routes/auth.route.js';
+import chatRoutes from './routes/chat.route.js';
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:5174"],
+    credentials: true
+}));
 
 
 // Routes
@@ -18,6 +22,7 @@ app.get('/', (req, res) => {
     res.send('<h1>Server is running</h1>');
 });
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes)
 
 
 // Start server

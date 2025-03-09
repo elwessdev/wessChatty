@@ -2,13 +2,21 @@ import { useState } from "react";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
 
 const LoginPage = () => {
+  const {signinLoading,signin} = useAuthStore();
+
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    signin(formData);
+  }
 
   return (
     <div className="h-screen grid lg:grid-cols-2">
@@ -31,7 +39,7 @@ const LoginPage = () => {
 
           {/* Form */}
           <form 
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
             className="space-y-6"
           >
             <div className="form-control">
@@ -81,8 +89,8 @@ const LoginPage = () => {
               </div>
             </div>
 
-            {/* <button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn}>
-              {isLoggingIn ? (
+            <button type="submit" className="btn btn-primary w-full" disabled={signinLoading}>
+              {signinLoading ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
@@ -90,7 +98,7 @@ const LoginPage = () => {
               ) : (
                 "Sign in"
               )}
-            </button> */}
+            </button>
           </form>
 
           <div className="text-center">

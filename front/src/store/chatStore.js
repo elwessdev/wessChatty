@@ -11,7 +11,7 @@ export const useChatStore = create((set,get)=>({
             const res = await axiosInstance.get("/chat/users");
             set({users:res.data});
         } catch(err){
-            console.error("Signin error: ", err);
+            console.error("getUsers error: ", err);
         }
     },
     

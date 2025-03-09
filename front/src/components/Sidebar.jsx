@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import useChatStore from "../store/chatStore";
@@ -78,4 +78,4 @@ const Sidebar = () => {
     </aside>
   );
 };
-export default Sidebar;
+export default memo(Sidebar);

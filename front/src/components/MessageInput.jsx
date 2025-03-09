@@ -2,11 +2,21 @@ import { useRef, useState } from "react";
 // import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import useChatStore from "../store/chatStore";
 
 const MessageInput = () => {
+  const {sendMessage} = useChatStore();
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!text.trim() && !imagePreview) return;
+    sendMessage({text});
+    setText("");
+    setImagePreview(null);
+  };
 
   return (
     <div className="p-4 w-full">
@@ -31,7 +41,7 @@ const MessageInput = () => {
       )}
 
       <form 
-        // onSubmit={handleSendMessage} 
+        onSubmit={handleSendMessage} 
         className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
           <input
@@ -41,14 +51,13 @@ const MessageInput = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <input
+          {/* <input
             type="file"
             accept="image/*"
             className="hidden"
             ref={fileInputRef}
             // onChange={handleImageChange}
-          />
-
+          /> */}
           <button
             type="button"
             className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}

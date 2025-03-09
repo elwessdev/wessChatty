@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export default mongoose.model("users", new mongoose.Schema({
+export default mongoose.model("user", new mongoose.Schema({
     name: {
         type: String,
         required: true,

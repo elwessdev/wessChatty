@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import useAuthStore from "./authStore";
 
 const useChatStore = create((set,get)=>({
     users: [],
@@ -51,8 +52,22 @@ const useChatStore = create((set,get)=>({
         } finally {
             setTimeout(()=>set({messagesLoading:false}),300)
         }
+    },
+    
+    // Track New Message
+    trackNewMessage: () => {
+        if(!get().selectedUser) return;
+        const socket = useAuthStore.getState().socketUser;
+        socket.on("newMessage",(msg)=>{
+            if(msg.from===get().selectedUser._id){
+                set({messages:[...get().messages,msg]});
+                // console.log(get().messages);
+            }
+        })
+    },
+    closeTrackNewMessage: () => {
+        const socket = useAuthStore.getState().socketUser;
+        socket.off("newMessage");
     }
-
-
 }));
 export default useChatStore;

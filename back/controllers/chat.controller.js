@@ -1,11 +1,13 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
+import { io, usersSocket } from "../lib/socket.js";
 
 // Get users
 export const getUsers = async(req,res) => {
     try {
         const currentUser = req.user._id;
         const users = await User.find({ _id: { $ne: currentUser } },{
+            // _id:0,
             email:1,
             name:1,
             profilePicture:1
@@ -30,6 +32,10 @@ export const sendMessage = async(req,res) => {
             text: msg.text
         });
         await message.save();
+        const receiverSocket = usersSocket.get(receiver._id.toString());
+        if(receiverSocket){
+            io.to(receiverSocket).emit("newMessage",message);
+        }
         return res.status(200).json({
             ...message.toObject(),
             from: {

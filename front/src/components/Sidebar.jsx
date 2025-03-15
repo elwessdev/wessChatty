@@ -2,14 +2,22 @@ import { memo, useEffect, useState } from "react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import useChatStore from "../store/chatStore";
+import useAuthStore from "../store/authStore";
 
 const Sidebar = () => {
-  const {users,usersLoading,getUsers,setSelectedUser} = useChatStore();
+  const {users,usersLoading,getUsers,setSelectedUser,selectedUser} = useChatStore();
+  const {onlineUsers} = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(()=>{
     getUsers();
-  },[getUsers])
+  },[getUsers]);
+
+  useEffect(()=>{
+    if(!showOnlineOnly) return setFilteredUsers(users);
+    setFilteredUsers(users.filter((user)=>onlineUsers.includes(user._id)));
+  },[showOnlineOnly,users,onlineUsers]);
 
   if (usersLoading) return <SidebarSkeleton />;
 
@@ -36,15 +44,11 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {users?.map((user,idx) => (
+        {filteredUsers?.map((user,idx) => (
           <button
             key={idx}
             onClick={() => setSelectedUser(user)}
-            className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-            `}
-            // ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+            className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?.email === user.email ? "bg-base-300 ring-1 ring-base-300" : ""}`}
           >
             <div className="relative mx-auto lg:mx-0">
               <img
@@ -52,28 +56,27 @@ const Sidebar = () => {
                 alt={user.name}
                 className="size-12 object-cover rounded-full"
               />
-              {/* {onlineUsers.includes(user._id) && (
+              {onlineUsers?.includes(user._id) && (
                 <span
                   className="absolute bottom-0 right-0 size-3 bg-green-500 
                   rounded-full ring-2 ring-zinc-900"
                 />
-              )} */}
+              )}
             </div>
 
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user?.name}</div>
               <div className="text-sm text-zinc-400">
-                {/* {onlineUsers.includes(user._id) ? "Online" : "Offline"} */}
-                Offline
+                {onlineUsers?.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
           </button>
         ))}
 
-        {/* {filteredUsers.length === 0 && (
+        {filteredUsers.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No online users</div>
-        )} */}
+        )}
       </div>
     </aside>
   );

@@ -65,12 +65,11 @@ export const signin = async(req,res)=>{
 // Logout
 export const logout = async(req,res)=>{
     try{
-        console.log("test");
         res.clearCookie('tkn', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'prod',
         });
-        console.log(req.cookies);
+        // console.log(req.cookies);
         return res.status(200).json({message: "Logged out successfully"});
     } catch(err){
         console.error("logout -> err", err);

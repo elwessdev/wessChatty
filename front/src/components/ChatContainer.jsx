@@ -9,12 +9,14 @@ import useAuthStore from "../store/authStore";
 
 const ChatContainer = () => {
   const messageEndRef = useRef(null);
-  const {messages,messagesLoading,selectedUser,getMessages} = useChatStore();
+  const {messages,messagesLoading,selectedUser,getMessages,trackNewMessage,closeTrackNewMessage} = useChatStore();
   const {user} = useAuthStore();
 
   useEffect(()=>{
     getMessages(selectedUser.email);
-  },[selectedUser.email,getMessages]);
+    trackNewMessage();
+    return ()=>closeTrackNewMessage();
+  },[selectedUser.email,getMessages,trackNewMessage,closeTrackNewMessage]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {

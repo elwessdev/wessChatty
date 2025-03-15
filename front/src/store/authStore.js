@@ -1,6 +1,9 @@
 import {create} from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
+import io from "socket.io-client";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const useAuthStore = create((set,get)=>({
     user: null,
@@ -10,7 +13,7 @@ const useAuthStore = create((set,get)=>({
     updateProfileLoading: false,
     checkAuthLoading: true,
     onlineUsers: [],
-    socket: null,
+    socketUser: null,
 
     signup: async (data)=>{
         set({signupLoading:true});
@@ -19,6 +22,7 @@ const useAuthStore = create((set,get)=>({
             console.log(res);
             set({user:res.data.user});
             set({signupLoading:false});
+            get().connectSocket();
             toast.success("Account created successfully");
         } catch (error) {
             console.error("Signup error: ", error);
@@ -33,6 +37,7 @@ const useAuthStore = create((set,get)=>({
         try{
             const res = await axiosInstance.post("/auth/signin", data);
             set({user:res.data.user});
+            get().connectSocket();
             toast.success("Logged in successfully");
         } catch(err){
             console.error("Signin error: ", err);
@@ -57,11 +62,33 @@ const useAuthStore = create((set,get)=>({
         try {
             const res = await axiosInstance.get("/auth/checkauth");
             set({user:res.data});
+            get().connectSocket();
         } catch (error) {
             console.error("CheckAuth error: ", error);
             set({user:null});
         } finally {
             set({checkAuthLoading:false});
+        }
+    },
+
+    connectSocket: ()=>{
+        if(!get().user || get().socketUser?.connected) return;
+        const socket = io(BASE_URL,{
+            query: {
+                user_id: get().user._id
+            }
+        });
+        socket.connect();
+        set({socketUser:socket});
+        socket.on("getOnlineUsers",(data)=>{
+            console.log(data);
+            set({onlineUsers:data});
+        })
+    },
+
+    disconnectSocket: () => {
+        if(get().socketUser.connected){
+            get().socketUser.disconnect();
         }
     }
 }));

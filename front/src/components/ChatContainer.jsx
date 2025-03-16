@@ -9,7 +9,7 @@ import useAuthStore from "../store/authStore";
 
 const ChatContainer = () => {
   const messageEndRef = useRef(null);
-  const {messages,messagesLoading,selectedUser,getMessages,trackNewMessage,closeTrackNewMessage} = useChatStore();
+  const { messages, messagesLoading, selectedUser, getMessages, trackNewMessage, closeTrackNewMessage } = useChatStore();
   const {user} = useAuthStore();
 
   useEffect(()=>{
@@ -19,7 +19,7 @@ const ChatContainer = () => {
   },[selectedUser.email,getMessages,trackNewMessage,closeTrackNewMessage]);
 
   useEffect(() => {
-    if (messageEndRef.current && messages) {
+    if (messageEndRef.current && messages.length) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
@@ -59,7 +59,7 @@ const ChatContainer = () => {
             </div>
             <div className="chat-header mb-1">
               <time className="text-xs opacity-50 ml-1">
-                {formatMessageTime(msg.createdAt)}
+                {formatMessageTime(msg?.createdAt)}
               </time>
             </div>
             <div className="chat-bubble flex flex-col">

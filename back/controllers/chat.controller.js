@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import { io, usersSocket } from "../lib/socket.js";
+import cloudinary from "../lib/cloudinary.js";
 
 // Get users
 export const getUsers = async(req,res) => {
@@ -26,11 +27,18 @@ export const sendMessage = async(req,res) => {
         if(!receiver){
             return res.status(404).json({message: "User not found"});
         }
+
         const message = new Message({
             from: req.user._id,
             to: receiver._id,
             text: msg.text
         });
+        if(msg.image){
+            const res = await cloudinary.uploader.upload(msg.image,{
+                upload_preset: process.env.COUD_PRESET
+            });
+            message.image = res.secure_url;
+        }
         await message.save();
         const receiverSocket = usersSocket.get(receiver._id.toString());
         if(receiverSocket){

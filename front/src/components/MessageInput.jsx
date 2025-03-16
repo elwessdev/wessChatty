@@ -13,10 +13,37 @@ const MessageInput = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
-    sendMessage({text});
+    sendMessage({
+      text,
+      image: imagePreview,
+    });
+    if(fileInputRef.current) fileInputRef.current.value = "";
     setText("");
     setImagePreview(null);
   };
+
+  const handleImageChange = (e) => {
+    console.log(e.target.files);
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if(file.size > 1024 * 1024 * 2){
+      toast.error("Image size must be less than 2MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+  }
+
+  const removeImage = () => {
+    setImagePreview(null);
+    fileInputRef.current.value = "";
+  }
 
   return (
     <div className="p-4 w-full">
@@ -29,7 +56,7 @@ const MessageInput = () => {
               className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
             />
             <button
-              // onClick={removeImage}
+              onClick={removeImage}
               className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
               flex items-center justify-center"
               type="button"
@@ -51,13 +78,13 @@ const MessageInput = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          {/* <input
+          <input
             type="file"
             accept="image/*"
             className="hidden"
             ref={fileInputRef}
-            // onChange={handleImageChange}
-          /> */}
+            onChange={handleImageChange}
+          />
           <button
             type="button"
             className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}

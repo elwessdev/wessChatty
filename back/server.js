@@ -9,7 +9,7 @@ import authRoutes from './routes/auth.route.js';
 import chatRoutes from './routes/chat.route.js';
 
 dotenv.config();
-app.use(express.json());
+app.use(express.json({ limit: '100mb' }));
 app.use(cookieParser());
 app.use(cors({
     origin: ["http://localhost:5173","https://wess-chatty.vercel.app"],
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.send('<h1>Server is running</h1>');
 });
 app.use("/api/auth", authRoutes);
-app.use("/api/chat", chatRoutes)
+app.use("/api/chat", chatRoutes);
 
 
 // Start server
@@ -30,7 +30,7 @@ const serverStart = async() => {
     try {
         await connectDB();
         server.listen(process.env.PORT, () => {
-            console.log(`Server running on port ${process.env.PORT}`);
+            console.log(`Server running on ${process.env.PORT}`);
         });
     } catch (error) {
         console.error("serverStart -> error", error);

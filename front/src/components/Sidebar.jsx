@@ -5,7 +5,12 @@ import useChatStore from "../store/chatStore";
 import useAuthStore from "../store/authStore";
 
 const Sidebar = () => {
-  const {users,usersLoading,getUsers,setSelectedUser,selectedUser} = useChatStore();
+  const users = useChatStore((state)=>state.users);
+  const usersLoading = useChatStore((state)=>state.usersLoading);
+  const getUsers = useChatStore((state)=>state.getUsers);
+  const setSelectedUser = useChatStore((state)=>state.setSelectedUser);
+  const selectedUser = useChatStore((state)=>state.selectedUser);
+
   const {onlineUsers} = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -29,7 +34,7 @@ const Sidebar = () => {
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
         {/* TODO: Online filter toggle */}
-        <div className="mt-3 hidden lg:flex items-center gap-2">
+        <div className="mt-3 hidden lg:flex items-center gap-2" style={{userSelect: "none"}}>
           <label className="cursor-pointer flex items-center gap-2">
             <input
               type="checkbox"
@@ -41,6 +46,31 @@ const Sidebar = () => {
           </label>
           <span className="text-xs text-zinc-500">online</span>
         </div>
+        {/* <div className="mt-3">
+          <input
+            type="text"
+            placeholder="Search users to invite"
+            className="input input-bordered w-full"
+          />
+          <div className="relative">
+            <ul className="absolute z-10 bg-white border border-base-300 rounded-md shadow-lg w-full max-h-60 overflow-y-auto">
+              {filteredUsers.map((user, idx) => (
+                <li
+                  key={idx}
+                  onClick={() => setSelectedUser(user)}
+                  className="p-2 hover:bg-base-300 cursor-pointer flex items-center gap-2"
+                >
+                  <img
+                    src={user?.profilePicture ? user?.profilePicture : "/avatar.png"}
+                    alt={user.name}
+                    className="size-8 object-cover rounded-full"
+                  />
+                  <span className="truncate">{user?.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div> */}
       </div>
 
       <div className="overflow-y-auto w-full py-3">

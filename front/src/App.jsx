@@ -14,14 +14,17 @@ import useAuthStore from "./store/authStore";
 
 
 const App = () => {
-  const {user, checkAuth, checkAuthLoading} = useAuthStore();
+  const user = useAuthStore(state=>state.user);
+  const refreshToken = useAuthStore(state=>state.refreshToken);
+  const checkAuthLoading = useAuthStore(state=>state.checkAuthLoading);
   const { theme } = useThemeStore();
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    refreshToken();
+    console.log("test")
+  }, [refreshToken]);
 
-  console.log({ user });
+  console.log(user);
 
   if (checkAuthLoading && !user){
     return (

@@ -1,10 +1,11 @@
 import express from 'express';
-import {checkAuthMiddle} from '../middleware/auth.middleware.js';
+import verifyToken from '../middleware/auth.middleware.js';
 import {
     signup,
     signin,
-    checkAuth,
-    logout
+    getMe,
+    logout,
+    refreshToken
 } from '../controllers/auth.controller.js';
 
 const router = express.Router();
@@ -14,9 +15,11 @@ router.post('/signup', signup);
 // Sign in
 router.post('/signin', signin);
 // Logout
-router.get('/logout',checkAuthMiddle,logout);
+router.get('/logout',logout);
 // Check Auth
-router.get('/checkauth',checkAuthMiddle,checkAuth);
+router.get('/me',verifyToken,getMe);
+// Check Auth
+router.post('/refresh',refreshToken);
 
 
 export default router;

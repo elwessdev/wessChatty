@@ -18,4 +18,5 @@ export default mongoose.model("user", new mongoose.Schema({
         type: String,
         default: "",
     },
+    refreshToken: String
 },{timestamps: true}));

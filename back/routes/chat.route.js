@@ -1,5 +1,5 @@
 import express from 'express';
-import {checkAuthMiddle} from '../middleware/auth.middleware.js';
+import verifyToken from '../middleware/auth.middleware.js';
 import { 
     getUsers,
     sendMessage,
@@ -9,10 +9,10 @@ import {
 const router = express.Router();
 
 // Get users
-router.get("/users",checkAuthMiddle,getUsers);
+router.get("/users",verifyToken,getUsers);
 // Send Message
-router.post("/send",checkAuthMiddle,sendMessage);
+router.post("/send",verifyToken,sendMessage);
 // Messages
-router.get("/messages/:email",checkAuthMiddle,messages);
+router.get("/messages/:email",verifyToken,messages);
 
 export default router;

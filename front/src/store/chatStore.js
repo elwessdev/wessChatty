@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosInstance } from "../lib/axios";
+import axiosInstance from "../lib/axios";
 import toast from "react-hot-toast";
 import useAuthStore from "./authStore";
 
@@ -14,7 +14,11 @@ const useChatStore = create((set,get)=>({
     getUsers: async()=>{
         set({usersLoading:true});
         try {
-            const res = await axiosInstance.get("/chat/users");
+            const res = await axiosInstance.get("/chat/users",{
+                headers:{
+                    Authorization: `Bearer ${useAuthStore.getState().accessToken}`
+                }
+            });
             set({users:res.data});
         } catch(err){
             console.error("getUsers error: ", err);
@@ -29,10 +33,17 @@ const useChatStore = create((set,get)=>({
     // Send Message
     sendMessage: async(msg)=>{
         try {
-            const res = await axiosInstance.post("/chat/send",{
-                msg,
-                to: get().selectedUser.email
-            });
+            const res = await axiosInstance.post("/chat/send",
+                {
+                    msg,
+                    to: get().selectedUser.email
+                }, 
+                {
+                    headers:{
+                        Authorization: `Bearer ${useAuthStore.getState().accessToken}`
+                    }
+                }
+            );
             set({messages:[...get().messages, res.data]});
         } catch(err){
             toast.error(err.response.data.message);
@@ -44,7 +55,11 @@ const useChatStore = create((set,get)=>({
     getMessages: async(user_email)=>{
         set({messagesLoading:true});
         try{
-            const res = await axiosInstance.get(`/chat/messages/${user_email}`);
+            const res = await axiosInstance.get(`/chat/messages/${user_email}`,{
+                headers:{
+                    Authorization: `Bearer ${useAuthStore.getState().accessToken}`
+                }
+            });
             set({messages:res.data});
         } catch(err){
             console.error("getMessages error: ", err);

@@ -6,7 +6,7 @@ import cloudinary from "../lib/cloudinary.js";
 // Get users
 export const getUsers = async(req,res) => {
     try {
-        const currentUser = req.user._id;
+        const currentUser = req.user.id;
         const users = await User.find({ _id: { $ne: currentUser } },{
             // _id:0,
             email:1,

@@ -28,8 +28,10 @@ export const sendMessage = async(req,res) => {
             return res.status(404).json({message: "User not found"});
         }
 
+        const userFrom = await User.findById(req.user.id).lean();
+
         const message = new Message({
-            from: req.user._id,
+            from: userFrom._id,
             to: receiver._id,
             text: msg.text
         });
@@ -47,9 +49,9 @@ export const sendMessage = async(req,res) => {
         return res.status(200).json({
             ...message.toObject(),
             from: {
-                name: req.user.name,
-                email: req.user.email,
-                profilePicture: req.user.profilePicture
+                name: userFrom.name,
+                email: userFrom.email,
+                profilePicture: userFrom.profilePicture
             },
             to: {
                 name: receiver.name,
@@ -70,10 +72,13 @@ export const messages = async(req,res)=>{
         if(!receiver){
             return res.status(404).json({message: "User not found"});
         }
+
+        const userFrom = await User.findById(req.user.id).lean();
+
         let messages = await Message.find({
             $or: [
-            { from: req.user._id, to: receiver._id },
-            { from: receiver._id, to: req.user._id }
+            { from: userFrom._id, to: receiver._id },
+            { from: receiver._id, to: userFrom._id }
             ]
         })
         .populate("from","name email profilePicture")

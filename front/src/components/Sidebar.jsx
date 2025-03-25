@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { BotMessageSquare, Users } from "lucide-react";
 import useChatStore from "../store/chatStore";
 import useAuthStore from "../store/authStore";
 
@@ -72,8 +72,25 @@ const Sidebar = () => {
           </div>
         </div> */}
       </div>
-
       <div className="overflow-y-auto w-full py-3">
+        <button
+            onClick={()=>setSelectedUser("ChattyAI")}
+            className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser=="ChattyAI" ? "bg-base-300 ring-1 ring-base-300" : ""}`}
+          >
+            <div className="relative mx-auto lg:mx-0">
+              <div className="size-9 rounded-lg bg-primary/10 flex justify-center items-center">
+                <BotMessageSquare className="w-5 h-5 text-primary" />
+              </div>
+              <span
+                className="absolute bottom-0 right-0 size-3 bg-green-500 
+                rounded-full ring-2 ring-zinc-900"
+              />
+            </div>
+            <div className="hidden lg:block text-left min-w-0">
+              <div className="font-medium truncate">ChattyAI</div>
+              <div className="text-sm text-zinc-400">Ask Me Anything</div>
+            </div>
+        </button>
         {filteredUsers?.map((user,idx) => (
           <button
             key={idx}
@@ -93,7 +110,6 @@ const Sidebar = () => {
                 />
               )}
             </div>
-
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user?.name}</div>
@@ -103,7 +119,6 @@ const Sidebar = () => {
             </div>
           </button>
         ))}
-
         {filteredUsers.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No online users</div>
         )}

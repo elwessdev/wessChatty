@@ -40,7 +40,7 @@ export const signup = async(req,res)=>{
         res.cookie("tkn",refresh_token,{
             httpOnly: true,
             secure: process.env.NODE_ENV === 'prod',
-            sameSite: 'Strict',
+            sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         return res.status(201).json({
@@ -91,7 +91,7 @@ export const signin = async(req,res)=>{
         res.cookie("tkn",refresh_token,{
             httpOnly: true,
             secure: process.env.NODE_ENV === 'prod',
-            sameSite: 'Strict',
+            sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         return res.status(201).json({

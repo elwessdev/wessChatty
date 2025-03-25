@@ -7,7 +7,7 @@ import ChattyAI from "../components/ChattyAI";
 
 const HomePage = () => {
   const selectedUser = useChatStore(state=>state.selectedUser);
-  console.log(selectedUser);
+  // console.log(selectedUser);
   return (
     <div className="h-screen bg-base-200">
       <div className="flex items-center justify-center pt-20 px-4">

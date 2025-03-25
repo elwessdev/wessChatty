@@ -7,6 +7,7 @@ import {app,server} from './lib/socket.js';
 import connectDB from './lib/db.js';
 import authRoutes from './routes/auth.route.js';
 import chatRoutes from './routes/chat.route.js';
+import botRoutes from './routes/bot.route.js';
 
 dotenv.config();
 app.use(express.json({ limit: '100mb' }));
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/bot", botRoutes);
 
 
 // Start server

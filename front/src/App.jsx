@@ -21,10 +21,9 @@ const App = () => {
 
   useEffect(() => {
     refreshToken();
-    console.log("test")
   }, [refreshToken]);
 
-  console.log(user);
+  // console.log(user);
 
   if (checkAuthLoading && !user){
     return (

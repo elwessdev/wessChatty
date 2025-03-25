@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+pre {
+    /* background: #1e1e1e; */
+    /* color: #dcdcdc; */
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.275);
+    margin: 15px 0;
+}
+
+pre code {
+font-family: 'Fira Code', monospace;
+font-size: 14px;
+color: #dcdcdc;
+display: block;
+}
+
+code .keyword { color: #569cd6; font-weight: bold; }
+code .string { color: #ce9178; }
+code .comment { color: #6a9955; font-style: italic; }
+code .number { color: #b5cea8; }
+code .function { color: #dcdcaa; }
+code .variable { color: #9cdcfe; }
+code .operator { color: #c586c0; }

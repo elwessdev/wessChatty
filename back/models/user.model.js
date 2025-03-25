@@ -18,5 +18,9 @@ export default mongoose.model("user", new mongoose.Schema({
         type: String,
         default: "",
     },
-    refreshToken: String
+    refreshToken: String,
+    bot: {
+        type: Array,
+        default: [],
+    }
 },{timestamps: true}));
